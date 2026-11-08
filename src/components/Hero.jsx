@@ -5,7 +5,6 @@ import profilePic from "../assets/images/Profile_Pic_1.jpg";
 import resumeIcon from "../assets/icons/resume.png";
 import { profile, resumeUrl, socials, resumeFileName } from "../data/content";
 import { flashPress } from "../lib/pressFlash";
-import { openResumePreview } from "../lib/resumePreview";
 
 const AVATAR_PLAY_COUNT = 1;
 
@@ -105,7 +104,6 @@ export default function Hero() {
         <a
           href={resumeUrl}
           download={resumeFileName}
-          onClick={openResumePreview}
           onPointerDown={flashPress}
           className="group relative flex justify-center overflow-hidden rounded-full bg-transparent px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-neutral-200 shadow-[inset_0_0_0_2px_#616467] transition duration-200 hover:bg-[#616467] hover:text-white data-[pressed]:bg-[#616467] data-[pressed]:text-white"
         >

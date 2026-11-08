@@ -3,7 +3,6 @@ import downloadIcon from "../assets/icons/download.png";
 import logo from "../assets/images/logo_white.png";
 import { profile, resumeUrl, resumeFileName } from "../data/content";
 import { flashPress } from "../lib/pressFlash";
-import { openResumePreview } from "../lib/resumePreview";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -33,7 +32,6 @@ export default function Header() {
         <a
           href={resumeUrl}
           download={resumeFileName}
-          onClick={openResumePreview}
           onPointerDown={flashPress}
           className="group relative flex justify-center overflow-hidden rounded-full bg-transparent px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-neutral-200 shadow-[inset_0_0_0_2px_#616467] transition duration-200 hover:bg-[#616467] hover:text-white data-[pressed]:bg-[#616467] data-[pressed]:text-white sm:text-xs"
         >
