@@ -6,6 +6,12 @@ const ProjectCard = forwardRef(function ProjectCard({ project }, ref) {
   const primaryLink = project.live || project.github || null;
   const ThumbWrapper = primaryLink ? "a" : "div";
   const thumbLinkProps = primaryLink ? { href: primaryLink, target: "_blank", rel: "noreferrer" } : {};
+  const tagStyling = {
+    "Personal": "border-panel-border bg-bg text-text-faint",
+    "Team Lead": "border-amber-500/40 bg-amber-500/10 text-amber-500",
+    "Coming Soon": "border-accent/40 bg-accent/10 text-accent italic",
+    "CodeRED": "border-red-500/40 bg-red-500/10 text-red-500",
+  }
 
   return (
     <div
@@ -35,15 +41,28 @@ const ProjectCard = forwardRef(function ProjectCard({ project }, ref) {
         {project.thumbnail ? (
           <img src={project.thumbnail} alt={project.name} className="size-full object-cover" />
         ) : (
-          <div className="flex size-full items-center justify-center bg-bg">
-            <span className="flex size-12 items-center justify-center rounded-xl border border-panel-border bg-panel font-display text-xl font-semibold text-accent">
-              {project.name[0]}
-            </span>
+          // Poster-style placeholder: an "under construction" note over the outlined project name, cropped at the bottom edge
+          <div className="@container flex size-full flex-col justify-between overflow-hidden bg-bg bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:12px_12px]">
+            <p className="px-4 pt-4 font-mono text-xs uppercase tracking-widest text-text-dim opacity-50">
+              Under construction...
+            </p>
+            <p className="-mb-[0.12em] -ml-[0.04em] whitespace-nowrap font-display text-[24cqw] font-semibold leading-[0.85] tracking-tight text-transparent [-webkit-text-stroke:1px_var(--color-accent)]">
+              {project.name}
+            </p>
           </div>
         )}
       </ThumbWrapper>
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <p className="text-sm font-semibold text-text">{project.name}</p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-sm font-semibold text-text">{project.name}</p>
+          {project.type && (
+            <span
+              className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${tagStyling[project.type]}`}
+            >
+              {project.type}
+            </span>
+          )}
+        </div>
         <p className="text-xs leading-relaxed text-text-dim">{project.description}</p>
         <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
           {project.techs.map((tech) => (

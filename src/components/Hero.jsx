@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import animatedAvatarVideo from "../assets/images/animatedGIF.mp4";
 import downloadIcon from "../assets/icons/download.png";
 import profilePic from "../assets/images/Profile_Pic_1.jpg";
-import { profile, resumeUrl, socials } from "../data/content";
+import resumeIcon from "../assets/icons/resume.png";
+import { profile, resumeUrl, socials, resumeFileName } from "../data/content";
+import { flashPress } from "../lib/pressFlash";
+import { openResumePreview } from "../lib/resumePreview";
 
 const AVATAR_PLAY_COUNT = 1;
 
@@ -101,11 +104,19 @@ export default function Hero() {
       <div className="flex flex-wrap items-center gap-4">
         <a
           href={resumeUrl}
-          download
-          className="flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-bg transition-opacity hover:opacity-85"
+          download={resumeFileName}
+          onClick={openResumePreview}
+          onPointerDown={flashPress}
+          className="group relative flex justify-center overflow-hidden rounded-full bg-transparent px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-neutral-200 shadow-[inset_0_0_0_2px_#616467] transition duration-200 hover:bg-[#616467] hover:text-white data-[pressed]:bg-[#616467] data-[pressed]:text-white"
         >
-          Resume
-          <img src={downloadIcon} alt="" className="size-4" />
+          {/* On hover the label slides out right while the download icon slides in from the left */}
+          <span className="flex items-center gap-2 transition-transform duration-400 group-hover:translate-x-40 group-data-[pressed]:translate-x-40">
+            Resume
+            <img src={resumeIcon} alt="" className="size-4 invert" />
+          </span>
+          <span className="absolute inset-0 flex -translate-x-40 items-center justify-center transition-transform duration-400 group-hover:translate-x-0 group-data-[pressed]:translate-x-0">
+            <img src={downloadIcon} alt="" className="size-4 invert" />
+          </span>
         </a>
         <div className="flex gap-2.5">
           {socials.map((social) => (

@@ -1,7 +1,12 @@
 import emailjs from "@emailjs/browser";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Section from "../components/Section";
+import SectionSidebar from "../components/SectionSidebar";
 import { socials } from "../data/content";
+import { fireConfetti } from "../lib/confetti";
+import { flashPress } from "../lib/pressFlash";
+
+const navItems = [{ id: "contact", label: "Contact" }];
 
 const serviceId = import.meta.env.VITE_SERVICE_ID;
 const templateId = import.meta.env.VITE_TEMPLATE_ID;
@@ -15,17 +20,18 @@ const inputClass =
 export default function ContactPage() {
   const [form, setForm] = useState(emptyForm);
   const [status, setStatus] = useState("idle");
+  const sendButtonRef = useRef(null);
 
   const handleChange = (event) => {
     setForm((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
-  const handleSubmit = (event) => {
+  // Sends the message, then pops confetti from the button once it goes through
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus("sending");
-
-    emailjs
-      .send(
+    try {
+      await emailjs.send(
         serviceId,
         templateId,
         {
@@ -35,16 +41,19 @@ export default function ContactPage() {
           message: form.message,
         },
         publicKey,
-      )
-      .then(() => {
-        setStatus("sent");
-        setForm(emptyForm);
-      })
-      .catch(() => setStatus("error"));
+      );
+      const rect = sendButtonRef.current?.getBoundingClientRect();
+      if (rect) fireConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      setStatus("sent");
+      setForm(emptyForm);
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
     <main className="flex flex-col gap-16 pb-16 pt-10">
+      <SectionSidebar sections={navItems} />
       <Section id="contact" title="Contact">
         <p className="max-w-sm text-sm text-text-dim">
           Got a question, an opportunity, or just want to say hi, send a message below.
@@ -54,6 +63,7 @@ export default function ContactPage() {
           <div className="rounded-2xl border border-panel-border bg-panel p-6 text-sm text-text-dim">
             <p className="font-medium text-text">Message sent, thanks!</p>
             <p className="mt-1">I'll get back to you soon.</p>
+            <p className="mt-2 text-xs italic">Feel free to check out any of my social platforms below.</p>
             <button
               type="button"
               onClick={() => setStatus("idle")}
@@ -116,10 +126,17 @@ export default function ContactPage() {
             )}
 
             <button
+              ref={sendButtonRef}
               type="submit"
               disabled={status === "sending"}
-              className="w-fit rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
+              onPointerDown={flashPress}
+              className="flex w-fit items-center gap-2 rounded-full bg-transparent px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-neutral-200 shadow-[inset_0_0_0_2px_#616467] transition duration-200 hover:bg-[#616467] hover:text-white data-[pressed]:bg-[#616467] data-[pressed]:text-white disabled:opacity-60"
             >
+              {status === "sending" && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" className="size-3.5 animate-spin">
+                  <path d="M21 12a9 9 0 1 1-6.22-8.56" />
+                </svg>
+              )}
               {status === "sending" ? "Sending..." : "Send message"}
             </button>
           </form>

@@ -27,6 +27,8 @@ import todoThumb from "../assets/images/todo_tn.png";
 import liveChatThumb from "../assets/images/live_chat_tn.png";
 import voiceVaultThumb from "../assets/images/voicevault_tn.png";
 import spaceTeleThumb from "../assets/images/space_tele_tn.png";
+import lambdaMedClinic from "../assets/images/lambda_med_clinic_tn.webp";
+import gestureLabs from "../assets/images/gesture_labs_tn.webp";
 
 import bcLogo from "../assets/images/bc.jpeg";
 import uhLogo from "../assets/images/uh.jpg";
@@ -39,8 +41,8 @@ export const profile = {
   pronunciation: "foo-uke",
   role: "Computer Science Student, Aspiring Software Engineer",
   location: "Houston, TX",
-  status: "Looking for internships",
-  gpa: "3.7",
+  status: "Looking for Summer 2027 Internships",
+  gpa: "3.7 / 4.0",
   expectedGraduation: "Jun 2028",
 };
 
@@ -52,6 +54,7 @@ export const links = {
 };
 
 export const resumeUrl = "/resume.pdf";
+export const resumeFileName = "Phuoc_Le_Resume.pdf";
 
 export const socials = [
   { name: "GitHub", icon: github, url: links.github },
@@ -133,12 +136,13 @@ export const career = [
       {
         title: "Full-Stack Software Development Intern",
         start: "Jun 2026",
-        end: null,
+        end: "Nov 2026",
         description: [
-          "Debugged and maintained a full-stack job-scraping pipeline (Python + React), resolving broken queries and duplicate/malformed records across 5,000+ listings, cutting stale/incorrect data by 50%+",
-          "Built a regex-based location classifier to tag 30,000+ scraped job listings by country at scrape time, replacing an unindexed 80-condition filter with a sargable lookup, improving load latency by about 98%",
-          "Shipped 2 full-stack AI-scored practice features (Mock Interview, Elevator Pitch) with admin-configurable rubrics, implementing a rolling 30-day usage window to track and auto-reset free-tier attempt limits with no scheduled job required",
-          "Diagnosed and fixed a production-only outage that silently blocked the audio playback/generation across both AI features, by replacing a blocked token-based Azure auth pattern with direct key-based access",
+          "Built and shipped two AI-scored interview-practice features end-to-end (Python/Flask, React, Azure AI Foundry): text-to-speech prompts, audio storage in Azure Blob Storage, speech-to-text, and LLM scoring against admin-configurable rubrics", 
+          "Stopped speech-to-text from hallucinating transcripts of silent or noisy recordings by adding pre-transcription checks for volume, minimum length, and long silences, so only real answers reach LLM scoring",
+          "Diagnosed a production-only outage that broke audio in both AI features: with no cloud log access, built a database-backed error log, traced failures to firewall-blocked token requests, and moved to key-based auth stored in server-side environment variables",
+          "Cut job-listing load time from ~42s to ~800ms on a 30K+ listing production database by replacing an ~80-clause NOT LIKE filter with a regex country classifier in the nightly scrape job and an indexed country column", 
+          "Normalized the scraper's schema into a unique-listings table with a one-to-many locations table, eliminating ~25% redundant rows, and added a 14-day retention cleanup to the nightly job to bound table growth",
         ],
       },
     ],
@@ -189,6 +193,16 @@ export const career = [
 
 export const projects = [
   {
+    name: "Lambda Medical Clinic",
+    thumbnail: lambdaMedClinic,
+    description:
+      "A full-stack management system for a multi-office clinic, covering the patient journey from online booking to payment through 6 role-based portals, backed by a PostgreSQL database of 46 tables with 16 triggers. As technical lead of a 5-person team, I set up the initial codebase, reviewed teammates' PRs before merging, and deployed the full app on Vercel. My responsibilities included designing the database schema, building session-based authentication with role-based access control (RBAC) for all 6 roles, developing most of the React/TypeScript frontend, and creating a Jest-tested mock billing system that calculates invoice totals automatically, guarded by an audit-trail trigger that rejects unattributed edits.",
+    github: "https://github.com/something0412/cosc3380-team9-medical-clinic-backend",
+    live: "https://cosc3380-team9-lambda.vercel.app/",
+    techs: ["React", "TypeScript", "Node.js", "Express", "PostgreSQL", "Tailwind", "Jest"],
+    type: "Team Lead",
+  },
+  {
     name: "Spacecraft Telemetry Pipeline",
     thumbnail: spaceTeleThumb,
     description:
@@ -196,6 +210,7 @@ export const projects = [
     github: "https://github.com/something0412/spacecraft_telemetry_pipeline",
     live: null,
     techs: ["Python", "FastAPI", "SQLite", "TypeScript", "Chart.js"],
+    type: "Personal",
   },
   {
     name: "Voice-Vault",
@@ -205,6 +220,7 @@ export const projects = [
     github: "https://github.com/something0412/voice-vault",
     live: "https://d4qejj20t2b30.cloudfront.net/",
     techs: ["AWS", "React", "JavaScript", "CSS"],
+    type: "Personal",
   },
   {
     name: "Live Chat",
@@ -214,6 +230,7 @@ export const projects = [
     github: "https://github.com/something0412/live_chat",
     live: "",
     techs: ["React", "TypeScript", "Python", "Flask", "Socket.io", "MongoDB"],
+    type: "Personal",
   },
   {
     name: "To-Do Mobile App",
@@ -223,6 +240,7 @@ export const projects = [
     github: "https://github.com/something0412/To-do-App",
     live: "",
     techs: ["React", "TypeScript", "Expo", "Tailwind"],
+    type: "Personal",
   },
   {
     name: "Portfolio v1",
@@ -232,5 +250,41 @@ export const projects = [
     github: "https://github.com/something0412/Portfolio_Website",
     live: "",
     techs: ["AWS", "React", "TypeScript", "CSS"],
+    type: "Personal",
+  },
+];
+
+export const upcomingProjects = [
+  {
+    name: "Rhabit",
+    thumbnail: null,
+    description:
+      "A daily self-discipline training app",
+    github: "",
+    live: "",
+    techs: [],
+    type: "Coming Soon",
+  },
+  {
+    name: "MajorMag",
+    thumbnail: null,
+    description:
+      "An interactive 3D web app that helps students understand different careers and industries before choosing a major.",
+    github: "",
+    live: "",
+    techs: [],
+    type: "Coming Soon",
+  },
+];
+
+export const hackathons = [{
+    name: "Gesture Labs",
+    thumbnail: gestureLabs,
+    description:
+      "GestureLabs was curated to assist the creatives who want to make music learn the intuition behind audio effects using a guided AI-Assisted Visual experience. The app uses real-time hand tracking directly in the browser, mapping multiple hand gestures to sound effect parameters so users can control and modify audio entirely through hand movements, without needing physical controls.",
+    github: "",
+    live: "https://gesturelabs.us/",
+    techs: ["Next.js", "TypeScript", "MediaPipe", "Gemini API", "Tiger Data", "CLAUDE"],
+    type: "CodeRED",
   },
 ];

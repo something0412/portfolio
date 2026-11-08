@@ -257,6 +257,8 @@ export default function Galaxy({
     const mesh = new Mesh(gl, { geometry, program });
     let animationId;
 
+    let lastTime = 0;
+
     function update(t) {
       animationId = requestAnimationFrame(update);
       if (!disableAnimation) {
@@ -264,10 +266,14 @@ export default function Galaxy({
         program.uniforms.uStarSpeed.value = (t * 0.001 * starSpeed) / 10.0;
       }
 
-      const lerp = 0.05;
-      smoothMousePos.current.x += (targetMousePos.current.x - smoothMousePos.current.x) * lerp;
-      smoothMousePos.current.y += (targetMousePos.current.y - smoothMousePos.current.y) * lerp;
-      smoothMouseActive.current += (targetMouseActive.current - smoothMouseActive.current) * lerp;
+      // Ease toward the cursor by time, not frames, so it stays smooth at any frame rate
+      const dt = lastTime ? Math.min(t - lastTime, 100) : 16;
+      lastTime = t;
+      const follow = 1 - Math.exp(-dt / 70);
+      const fade = 1 - Math.exp(-dt / 300);
+      smoothMousePos.current.x += (targetMousePos.current.x - smoothMousePos.current.x) * follow;
+      smoothMousePos.current.y += (targetMousePos.current.y - smoothMousePos.current.y) * follow;
+      smoothMouseActive.current += (targetMouseActive.current - smoothMouseActive.current) * fade;
 
       program.uniforms.uMouse.value[0] = smoothMousePos.current.x;
       program.uniforms.uMouse.value[1] = smoothMousePos.current.y;
@@ -292,17 +298,18 @@ export default function Galaxy({
       targetMouseActive.current = 0.0;
     }
 
+    // Listen on the whole page, since the content sits on top of the background
     if (mouseInteraction) {
-      container.addEventListener("mousemove", handleMouseMove);
-      container.addEventListener("mouseleave", handleMouseLeave);
+      window.addEventListener("mousemove", handleMouseMove);
+      document.documentElement.addEventListener("mouseleave", handleMouseLeave);
     }
 
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
       if (mouseInteraction) {
-        container.removeEventListener("mousemove", handleMouseMove);
-        container.removeEventListener("mouseleave", handleMouseLeave);
+        window.removeEventListener("mousemove", handleMouseMove);
+        document.documentElement.removeEventListener("mouseleave", handleMouseLeave);
       }
       if (gl.canvas.parentNode === container) {
         container.removeChild(gl.canvas);

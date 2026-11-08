@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import Header from "./Header";
+import ResumePreview from "./ResumePreview";
 import ScrollToTop from "./ScrollToTop";
 import SpaceBackground from "./SpaceBackground";
 
@@ -17,6 +18,7 @@ export default function Layout() {
           <Footer />
         </div>
       </div>
+      <ResumePreview />
     </>
   );
 }
